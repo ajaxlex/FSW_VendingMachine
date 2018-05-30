@@ -13,13 +13,15 @@ Hardware configuration consists of the following:
 BASIC LOGIC
 -----------
 
-"Coin Handler" receives button presses from end user who desires a product.
-If user adds coins before selecting a product, then TODO_FEEDBACK_CHOOSE_PRODUCT_FIRST
-If there is no more of the product, then TODO_FEEDBACK_NO_MORE_GOODY
-If there are not enough credits recorded for a product, then TODO_FEEDBACK_ADD_MORE_COINS
-If there are enough credits, then DISPENSE_PRODUCT and REJECT_MORE_COINS
-TODO establish timeouts for when to resume waiting for new request
-TODO establish way for unused coins to be returned
+* "Coin Handler" receives button presses from end user who desires a product.
+* If user adds coins before selecting a product TODO_FEEDBACK_CHOOSE_PRODUCT_FIRST
+* If there is no more of the product TODO_FEEDBACK_NO_MORE_GOODY
+* If there are not enough credits recorded for a product TODO_FEEDBACK_ADD_MORE_COINS
+* If there are enough credits DISPENSE_PRODUCT and REJECT_MORE_COINS
+
+
+* TODO establish timeouts for when to resume waiting for new request
+* TODO establish way for unused coins to be returned
 
 
 PSEUDOCODE
