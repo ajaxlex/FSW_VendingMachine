@@ -22,16 +22,16 @@
 
 #define UNDETERMINED_PHASE -1
 
-# coin phase will listen to the coin collector and button presses
+// coin phase will listen to the coin collector and button presses
 #define COIN_PHASE 0
 
-# motor phase will talk and listen to the motor controller
+// motor phase will talk and listen to the motor controller
 #define MOTOR_PHASE 1
 
-#define EOL 255;
-#define TEST_VAL 222;
-#define HANDSHAKE 233;
-#define NO_DATA 999;
+#define EOL 255
+#define TEST_VAL 222
+#define HANDSHAKE 233
+#define NO_DATA 999
 
 
 
@@ -44,6 +44,9 @@ int length = 0;
 char response[20];
 
 int commPhase = UNDETERMINED_PHASE;
+
+bool testPassed = false;
+bool testFailed = false;
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -66,11 +69,15 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
+
   testControllersConnection();
-  sendData = NO_DATA;
-  //readButtons();
-  readCoinMachine();
-  readMotorController();
+
+  if ( testPassed ) {
+    sendData = NO_DATA;
+    //readButtons();
+    readCoinMachine();
+    readMotorController();
+  }
 }
 
 
@@ -133,23 +140,21 @@ bool motorPhase(){
 }
 
 bool testControllersConnection(){
-    motorSerial.listen();
-    motorSerial.print( TEST_VAL );
-
-    bool exit = false;
-    int escape = 0;
-
-    while ( exit != true ) {
+    if ( !testPassed && !testFailed ) {
+      Serial.println("Testing Connection");
+    
+      motorSerial.listen();
+      motorSerial.print( TEST_VAL );
+  
       if (motorSerial.available()) {
         int m = motorSerial.read();
+        debugChar(m);
         if ( m != EOL && m == HANDSHAKE ) {
           debugChar(m);
           return true;
         }
       }
       escape++;
-      if ( escape > 10000 ) {
-        return false;
-      }
+      if ( escape > 10000 ) { testFailed = true;}
     }
 }

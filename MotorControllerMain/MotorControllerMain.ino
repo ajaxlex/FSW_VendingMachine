@@ -4,12 +4,12 @@
 #include <SoftwareSerial.h>
 SoftwareSerial coinSerial = SoftwareSerial(COIN_IN,COIN_OUT);
 
-#define TEST_VAL 222;
-#define HANDSHAKE 233;
+#define TEST_VAL 222
+#define HANDSHAKE 233
 
-#define VENDING 9;
+#define VENDING 9
 
-#define EOL 255;
+#define EOL 255
 
 void setup() {
   // put your setup code here, to run once:
@@ -22,7 +22,7 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  coinSerial.listen();
   if (coinSerial.available()) {
     int c = coinSerial.read();
     debugChar(c);
