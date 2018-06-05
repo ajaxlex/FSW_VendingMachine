@@ -33,6 +33,11 @@
 #define HANDSHAKE 233
 #define NO_DATA 999
 
+#define PRETEST_INIT 0
+#define PRETEST_PASSED 1
+#define PRETEST_FAILED 2
+#define PRETEST_LISTEN 3
+
 
 
 SoftwareSerial coinSerial = SoftwareSerial(COIN_IN, COIN_NULL);
@@ -45,8 +50,7 @@ char response[20];
 
 int commPhase = UNDETERMINED_PHASE;
 
-bool testPassed = false;
-bool testFailed = false;
+int testState = PRETEST_INIT;
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -140,13 +144,17 @@ bool motorPhase(){
 }
 
 bool testControllersConnection(){
-    if ( !testPassed && !testFailed ) {
-      Serial.println("Testing Connection");
-    
+    if ( testState == PRETEST_INIT ) {
+      Serial.println("Testing Connection SEND");
       motorSerial.listen();
       motorSerial.print( TEST_VAL );
-  
+      testState = PRETEST_LISTEN;
+
+    } else if ( testState = PRETEST_LISTEN ) {
+      Serial.println("Testing Connection LISTEN");
+      motorSerial.listen();
       if (motorSerial.available()) {
+        Serial.println("Testing Connection AVAILABLE");
         int m = motorSerial.read();
         debugChar(m);
         if ( m != EOL && m == HANDSHAKE ) {
