@@ -10,8 +10,8 @@ void setup() {
   pinMode(COIN_OUT, OUTPUT);
 
   Serial.begin(9600);
-  Serial.println("motor spirals ready");          
-  coinSerial.begin(4800);  
+  Serial.println("motor spirals ready");
+  coinSerial.begin(4800);
 }
 
 void loop() {
@@ -22,7 +22,7 @@ void loop() {
     if ( c != 255 ) {
       if ( c == 1 ) {
         coinSerial.write(9);
-        Serial.print(c);            
+        Serial.print(c);
       }
     }
   }
