@@ -51,6 +51,7 @@ char response[20];
 int commPhase = UNDETERMINED_PHASE;
 
 int testState = PRETEST_INIT;
+int escape = 0;
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -76,7 +77,7 @@ void loop() {
 
   testControllersConnection();
 
-  if ( testPassed ) {
+  if ( testState == PRETEST_PASSED ) {
     sendData = NO_DATA;
     //readButtons();
     readCoinMachine();
@@ -163,6 +164,6 @@ bool testControllersConnection(){
         }
       }
       escape++;
-      if ( escape > 10000 ) { testFailed = true;}
+      if ( escape > 10000 ) { testState = PRETEST_FAILED;}
     }
 }
