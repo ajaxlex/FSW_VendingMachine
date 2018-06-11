@@ -1,8 +1,16 @@
 #define COIN_IN 0
 #define COIN_OUT 1
 
-#include <SoftwareSerial.h>
-SoftwareSerial coinSerial = SoftwareSerial(COIN_IN,COIN_OUT);
+# define motor_1 2
+# define motor_2 3
+# define motor_3 4
+# define motor_4 5
+# define motor_5 6
+# define motor_6 7
+# define motor_7 8
+# define motor_8 9
+
+# define TEST_PIN 14  // analog 0 
 
 #define TEST_VAL 222
 #define HANDSHAKE 233
@@ -16,54 +24,117 @@ SoftwareSerial coinSerial = SoftwareSerial(COIN_IN,COIN_OUT);
 void setup() {
 
   pinMode(ledPin, OUTPUT);
-  
-  // put your setup code here, to run once:
-  //pinMode(COIN_IN, INPUT);
-  //pinMode(COIN_OUT, OUTPUT);
 
+  pinMode(motor_1, OUTPUT);
+  pinMode(motor_2, OUTPUT);
+  pinMode(motor_3, OUTPUT);
+  pinMode(motor_4, OUTPUT);
+  pinMode(motor_5, OUTPUT);
+  pinMode(motor_6, OUTPUT);
+  pinMode(motor_7, OUTPUT);
+  pinMode(motor_8, OUTPUT);
+
+  pinMode( TEST_PIN,INPUT_PULLUP );
+  
   Serial.begin(4800);
-  //Serial.println("motor spirals ready");
-  //coinSerial.begin(4800);
 }
 
 void loop() {
-  //coinSerial.listen();
-  //coinSerial.write(HANDSHAKE);
-  responseDIRECT();
+  if ( noSpecialRequest() ) {
+    responseDIRECT();
+  }
+}
+
+bool noSpecialRequest(){
+  if ( digitalRead( TEST_PIN ) == LOW ) {
+
+    actuateMotor('1'); 
+    delay( 2000 );
+    actuateMotor('2'); 
+    delay( 2000 );
+    actuateMotor('3'); 
+    delay( 2000 );
+    actuateMotor('4'); 
+    delay( 2000 );
+    actuateMotor('5'); 
+    delay( 2000 );    
+    actuateMotor('6'); 
+    delay( 2000 );
+    actuateMotor('7'); 
+    delay( 2000 );
+    actuateMotor('8'); 
+
+    return false;
+  }
+  return true;
 }
 
 void responseDIRECT(){
   if (Serial.available()) {
-    int c = Serial.read();
-    //debugChar(c);
+    //char b = Serial.read();
+    char c = Serial.read();
     if ( c != EOL ) {
-      //if ( c == TEST_VAL ) {
-        slowBlink();
-      //} else if ( c == 1 ) {
-      //  coinSerial.write(VENDING);
-      //  Serial.print(c);
-      //}
+      //blink(2, 80);
+      actuateMotor( c );
+      //Serial.write(HANDSHAKE);
+
+      // FLUSH
+      while ( Serial.available() > 0 ) {
+        Serial.read();      
+      }
     }
   }    
 }
 
-void ssResponse(){
-  if (coinSerial.available()) {
-    int c = coinSerial.read();
-    debugChar(c);
-    if ( c != EOL ) {
-      //if ( c == TEST_VAL ) {
-        coinSerial.write(HANDSHAKE);
-      //} else if ( c == 1 ) {
-      //  coinSerial.write(VENDING);
-      //  Serial.print(c);
-      //}
-    }
-  }  
+void actuateMotor( char c ){
+
+  if ( c == '1' ) {
+    sendMotorSignal( motor_1 );
+  } else if ( c == '2' ) {
+    sendMotorSignal( motor_2 );
+  } else if ( c == '3' ) {
+    sendMotorSignal( motor_3 );
+  } else if ( c == '4' ) {
+    sendMotorSignal( motor_4 );
+  } else if ( c == '5' ) {
+    sendMotorSignal( motor_5 );
+  } else if ( c == '6' ) {
+    sendMotorSignal( motor_6 );
+  } else if ( c == '7' ) {
+    sendMotorSignal( motor_7 );
+  } else if ( c == '8' ) {
+    sendMotorSignal( motor_8 );
+  } else {
+    blink(500,10);
+    delay(1000);
+    //blink(c,500);
+  }
+  
 }
 
-void debugChar( char c ){
-  Serial.print(c);
+void sendMotorSignal( int motor ){
+  //testWrite();
+  //return;
+  blink( motor, 150 );  
+  digitalWrite( motor, HIGH );
+  delay(6000);
+  digitalWrite( motor, LOW );
+}
+
+void testWrite(){
+  int t=2;
+  digitalWrite( t, HIGH );
+  delay(5000);
+  digitalWrite( t, LOW );
+  return;
+  
+  for ( int i=2; i<10; i++ ){
+    digitalWrite( i, HIGH );
+  }
+  delay(5000);
+  for ( int i=2; i<10; i++ ){
+    digitalWrite( i, LOW );
+  }  
 }
 
 void fastBlink(){
@@ -72,7 +143,6 @@ void fastBlink(){
 
 void slowBlink(){
   blink(3, 900);
-  Serial.write(HANDSHAKE);
 }
 
 void blink( int count, int delayTime ){
