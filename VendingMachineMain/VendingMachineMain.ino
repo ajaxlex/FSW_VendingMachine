@@ -37,14 +37,6 @@
 
 #define TEST_PIN 14
 
-#define UNDETERMINED_PHASE -1
-
-// coin phase will listen to the coin collector and button presses
-#define COIN_PHASE 0
-
-// motor phase will talk and listen to the motor controller
-#define MOTOR_PHASE 1
-
 #define EOL 255
 #define TEST_VAL 222
 #define HANDSHAKE 233
