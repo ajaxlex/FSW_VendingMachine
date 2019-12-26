@@ -1,15 +1,3 @@
-/*
-  AnalogReadSerial
-
-  Reads an analog input on pin 0, prints the result to the Serial Monitor.
-  Graphical representation is available using Serial Plotter (Tools > Serial Plotter menu).
-  Attach the center pin of a potentiometer to pin A0, and the outside pins to +5V and ground.
-
-  This example code is in the public domain.
-
-  http://www.arduino.cc/en/Tutorial/AnalogReadSerial
-*/
-
 #include <SoftwareSerial.h>
 #include <Bounce2.h>
 
@@ -60,7 +48,6 @@ bool enoughCoins = false;
 
 // the setup routine runs once when you press reset:
 void setup() {
-  // initialize serial communication at 9600 bits per second:
 
   pinMode(ledPin, OUTPUT);
   pinMode(TEST_PIN, INPUT_PULLUP );
