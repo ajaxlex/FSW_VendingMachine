@@ -1,15 +1,31 @@
 #include <SoftwareSerial.h>
 #include <Bounce2.h>
 
+#define NUM_PRODUCTS 4
+
 #define button_1 2
 #define button_2 3
 #define button_3 4
 #define button_4 5
 
-# define motor_1 6
-# define motor_2 7
-# define motor_3 8
-# define motor_4 9
+#define motor_1 6
+#define motor_2 7
+#define motor_3 8
+#define motor_4 9
+
+#define cost_1 25
+#define cost_2 25
+#define cost_3 25
+#define cost_4 25
+
+#define EOL 255
+
+// duration in milliseconds
+#define MOTOR_TURN_DURATION 6000
+
+
+
+#define TEST_MODE 0
 
 #define COIN_IN 11
 #define COIN_NULL 0
@@ -17,22 +33,12 @@
 #define ledPin 13
 #define TEST_PIN 14
 
-#define EOL 255
-#define TEST_VAL 222
-#define HANDSHAKE 233
-#define NO_DATA 999
-
-#define MOTOR_TURN_DURATION 6000
-
-#define TEST_MODE 1
-
-#define NUM_PRODUCTS 4
 
 struct productLink {
   int button;
   int motor;
   int cost;
-  bool button_state;
+  bool button_was_pressed;
   Bounce deb;
 } products[NUM_PRODUCTS];
 
@@ -70,6 +76,9 @@ void setup() {
   products[2] = { button_3, motor_3, 0, false, deb_3 };
   products[3] = { button_4, motor_4, 0, false, deb_4 };
   
+
+  // PRODUCT COSTS SET
+
   products[0].cost = 25;
   products[1].cost = 25;
   products[2].cost = 25;
@@ -105,12 +114,9 @@ void setupMotors() {
 
 
 
-
-
-
-
-
-
+////////////////////////////////////////////////////
+// MAIN LOOP 
+////////////////////////////////////////////////////
 
 // the loop routine runs over and over again forever:
 void loop(){
@@ -154,13 +160,23 @@ void readButtons(){
 // If there are also enough coins, it activates the appropriate motor
 void checkButtonState( int state, int idx ){
   if ( state == LOW ) {
+    if ( products[idx].button_was_pressed == false ) {
     testPrint('B');
     testPrint(idx);
-    if ( updateCoinAmount( idx ) ) {
-      actuateMotor( products[idx].motor );
-    } else {
-      delay(500);
+    checkCoinAmount(idx);
+    products[idx].button_was_pressed = true;
     }
+  } else {
+    products[idx].button_was_pressed = false;
+  }
+}
+
+// if there is enough money, vend product
+void checkCoinAmount( int idx ) {
+  if ( updateCoinAmount( idx ) ) {
+    actuateMotor( products[idx].motor );
+  } else {
+    delay(500);
   }
 }
 
