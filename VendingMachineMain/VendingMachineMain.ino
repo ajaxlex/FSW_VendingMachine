@@ -23,8 +23,6 @@
 // duration in milliseconds
 #define MOTOR_TURN_DURATION 6000
 
-
-
 #define TEST_MODE 0
 
 #define COIN_IN 11
@@ -79,10 +77,10 @@ void setup() {
 
   // PRODUCT COSTS SET
 
-  products[0].cost = 25;
-  products[1].cost = 25;
-  products[2].cost = 25;
-  products[3].cost = 25;
+  products[0].cost = cost_1;
+  products[1].cost = cost_2;
+  products[2].cost = cost_3;
+  products[3].cost = cost_4;
 
   setupTest();
   setupButtons();
